@@ -99,6 +99,8 @@ def get_total_account_value(accounts):
 
 
 def get_account_value(account):
+    if account['currency'] == 'USD':
+        return round_usd(account['balance'])
     product = PRODUCTS[account['currency']]
     d = get_gdax_product(product)
     last = d['last']
