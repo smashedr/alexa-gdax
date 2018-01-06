@@ -1,0 +1,29 @@
+{% extends "oauth.html" %}
+{% load staticfiles %}
+
+{% block oauth %}
+
+
+    <div class="row">
+        <div>
+
+            <div id="login-message">
+                {% if messages %}
+                    <p></p>
+                    <ul class="list-group text-center">
+                        {% for message in messages %}
+                            <li class="list-group-item list-group-item-{{ message.extra_tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <p>Account has been linked. You may close this window and return to Alexa.</p>
+            <blockquote><p>
+                Alexa, ask GDAX for an accounts overview.
+            </p></blockquote>
+
+        </div>
+    </div>
+
+{% endblock %}

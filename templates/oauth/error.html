@@ -1,0 +1,29 @@
+{% extends "oauth.html" %}
+{% load staticfiles %}
+
+{% block oauth %}
+
+    <div class="row">
+        <div>
+
+            <div id="login-message">
+                {% if messages %}
+                    <p></p>
+                    <ul class="list-group text-center">
+                        {% for message in messages %}
+                            <li class="list-group-item list-group-item-{{ message.extra_tags }}">
+                                {{ message }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <p></p>
+
+            <p class="text-center">You may close this window.</p>
+
+        </div>
+    </div>
+
+{% endblock %}

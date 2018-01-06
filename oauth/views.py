@@ -22,7 +22,7 @@ def has_success(request):
     # You will be redirected back to Alexa
     # I am not even sure if this is even used...
     """
-    return render(request, 'success.html')
+    return render(request, 'oauth/success.html')
 
 
 def has_error(request):
@@ -31,7 +31,7 @@ def has_error(request):
     # This is for debugging only
     # Error handling does not yet exist
     """
-    return render(request, 'error.html')
+    return render(request, 'oauth/error.html')
 
 
 def privacy_policy(request):
@@ -40,7 +40,7 @@ def privacy_policy(request):
     # This is copied from old project
     # It will be removed and added to home
     """
-    return render(request, 'privacy.html')
+    return render(request, 'oauth/privacy.html')
 
 
 @require_http_methods(['GET'])
@@ -69,7 +69,7 @@ def do_authorize(request):
         if not request.session['state']:
             raise ValueError('Inivalid state')
 
-        return render(request, 'login.html')
+        return render(request, 'oauth/authorize.html')
     except Exception as error:
         logger.exception(error)
         messages.add_message(
