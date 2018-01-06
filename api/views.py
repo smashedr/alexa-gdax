@@ -65,11 +65,18 @@ def alexa_post(request):
             return acct_overview(event)
         elif intent == 'CoinStatus':
             return coin_status(event)
+        elif intent == 'AccountValue':
+            return account_value(event)
         else:
             raise ValueError('Unknown Intent')
     except Exception as error:
         logger.exception(error)
         return alexa_resp('Error. {}'.format(error), 'Error')
+
+
+def account_value(event):
+    # Alexa Response
+    return alexa_resp('This is not yet finished.', 'WIP')
 
 
 def coin_status(event):
@@ -107,18 +114,7 @@ def acct_overview(event):
     # Alexa Response
     try:
         d = get_accounts(event['session']['user']['accessToken'])
-
-        accounts = []
-        for a in d:
-            if int(a['balance'].replace('.', '')) > 0:
-                c = {
-                    'balance': a['balance'],
-                    'currency': a['currency'],
-                    'available': a['available'],
-                    'hold': a['hold'],
-                }
-                accounts.append(c)
-
+        accounts = get_accounts_of_value(d)
         if not accounts:
             msg = 'No accounts with currency found.'
             return alexa_resp(msg, 'Accounts Overview')
@@ -158,6 +154,20 @@ def acct_overview(event):
     except Exception as error:
         logger.exception(error)
         return alexa_resp('Error: {}'.format(error), 'Error')
+
+
+def get_accounts_of_value(accounts):
+    accounts_list = []
+    for a in accounts:
+        if int(a['balance'].replace('.', '')) > 0:
+            c = {
+                'balance': a['balance'],
+                'currency': a['currency'],
+                'available': a['available'],
+                'hold': a['hold'],
+            }
+            accounts_list.append(c)
+    return accounts_list
 
 
 def get_accounts(key):

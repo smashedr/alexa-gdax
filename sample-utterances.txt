@@ -19,3 +19,7 @@ AccountOverview accounts status
 AccountOverview for accounts status
 AccountOverview account status
 AccountOverview accounts status
+
+AccountValue my account value
+AccountValue my total account value
+AccountValue how much my account is worth
