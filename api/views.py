@@ -1,10 +1,9 @@
 import gdax
 import json
 import logging
-import os
+import re
 import requests
 from django.conf import settings
-from django.http import JsonResponse
 from django.shortcuts import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -17,18 +16,31 @@ config = settings.CONFIG['app']
 TXT_UNKNOWN = 'I did not understand that request, please try something else.'
 TXT_ERROR = 'Error looking up {}, please try something else.'
 
-CURRENCIES = {
-    'bitcoin': 'BTC',
-    'bitcoin cash': 'BCH',
-    'litecoin': 'LTC',
-    'ethereum': 'ETH',
-}
-
 PRODUCTS = {
-    'bitcoin': 'BTC-USD',
-    'bitcoin cash': 'BCH-USD',
-    'litecoin': 'LTC-USD',
-    'ethereum': 'ETH-USD',
+    'BTC': {
+        'product': 'BTC-USD',
+        'short': 'BTC',
+        'name': 'bitcoin',
+        're': 'bit',
+    },
+    'BCH': {
+        'product': 'BCH-USD',
+        'short': 'BCH',
+        'name': 'bitcoin cash',
+        're': 'cash',
+    },
+    'LTC': {
+        'product': 'LTC-USD',
+        'short': 'LTC',
+        'name': 'litecoin',
+        're': '(lite|light)',
+    },
+    'ETH': {
+        'product': 'ETH-USD',
+        'short': 'ETH',
+        'name': 'ethereum',
+        're': 'eth',
+    },
 }
 
 
@@ -66,22 +78,18 @@ def alexa_post(request):
 def coin_status(event):
     try:
         value = event['request']['intent']['slots']['currency']['value']
-        value = value.lower().replace('define', '').strip()
-        value = value.lower().replace('lookup', '').strip()
-        value = value.lower().replace('look up', '').strip()
-        value = value.lower().replace('search', '').strip()
-        value = value.lower().replace('find', '').strip()
         logger.info('value: {}'.format(value))
-        if value in PRODUCTS:
+        product = get_product(value)
+        if product:
             url = 'https://api.gdax.com/products/{}/stats'.format(
-                PRODUCTS[value]
+                product['product']
             )
             r = requests.get(url)
             d = json.loads(r.content.decode())
             speech = ('{} stats for the last 24 hours. '
                       'The low was {}, the high was {} '
                       'and the last price is {}').format(
-                PRODUCTS[value][:3],
+                product['short'],
                 round_usd(d['low']),
                 round_usd(d['high']),
                 round_usd(d['last']),
@@ -89,10 +97,9 @@ def coin_status(event):
             return alexa_resp(speech, 'Coin Status')
         else:
             msg = 'Unknown currency {}. Please try one of: {}'.format(
-                value, ', '.join([*PRODUCTS])
+                value, get_product_list()
             )
             return alexa_resp(msg, 'Error')
-
     except Exception as error:
         logger.info('error: {}'.format(error))
         return alexa_resp(TXT_UNKNOWN, 'Error')
@@ -172,6 +179,26 @@ def get_accounts(key):
     except Exception as error:
         logger.exception(error)
         return False
+
+
+def get_product(slot):
+    logger.info('slot: {}'.format(slot))
+    if re.search(PRODUCTS['BTC']['re'], slot):
+        return PRODUCTS['BTC']
+    if re.search(PRODUCTS['BCH']['re'], slot):
+        return PRODUCTS['BCH']
+    if re.search(PRODUCTS['LTC']['re'], slot):
+        return PRODUCTS['LTC']
+    if re.search(PRODUCTS['ETH']['re'], slot):
+        return PRODUCTS['ETH']
+    return False
+
+
+def get_product_list():
+    l = []
+    for k, v in PRODUCTS.items():
+        l.append(v['name'])
+    return ', '.join(l)
 
 
 def round_usd(in_float):
