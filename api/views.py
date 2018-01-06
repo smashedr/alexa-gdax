@@ -76,7 +76,43 @@ def alexa_post(request):
 
 def account_value(event):
     # Alexa Response
-    return alexa_resp('This is not yet finished.', 'WIP')
+    try:
+        d = get_accounts(event['session']['user']['accessToken'])
+        accounts = get_accounts_of_value(d)
+        total_value = get_total_account_value(accounts)
+        s = '' if len(accounts) == 1 else 's'
+        speech = 'Your total account value over {} account{} is {} USD.'.format(
+            len(accounts), s, total_value
+        )
+        return alexa_resp(speech, 'Accounts Overview')
+    except Exception as error:
+        logger.exception(error)
+        return alexa_resp('Error: {}'.format(error), 'Error')
+
+
+def get_total_account_value(accounts):
+    total = 0
+    for a in accounts:
+        value = get_account_value(a)
+        total += value
+    return round_usd(total)
+
+
+def get_account_value(account):
+    product = '{}-USD'.format(account['currency'])
+    d = get_gdax_product(product)
+    last = d['last']
+    balance = account['balance']
+    value = float(balance) * float(last)
+    return round_usd(value)
+
+
+def get_gdax_product(product):
+    url = 'https://api.gdax.com/products/{}/stats'.format(
+        product['product']
+    )
+    r = requests.get(url)
+    return r.json()
 
 
 def coin_status(event):
@@ -84,13 +120,9 @@ def coin_status(event):
     try:
         value = event['request']['intent']['slots']['currency']['value']
         logger.info('value: {}'.format(value))
-        product = get_product(value)
+        product = get_product_info(value)
         if product:
-            url = 'https://api.gdax.com/products/{}/stats'.format(
-                product['product']
-            )
-            r = requests.get(url)
-            d = json.loads(r.content.decode())
+            d = get_gdax_product(product)
             speech = ('{} stats for the last 24 hours. '
                       'The low was {}, the high was {}, '
                       'and the last price is {}').format(
@@ -120,7 +152,7 @@ def acct_overview(event):
             return alexa_resp(msg, 'Accounts Overview')
 
         speech = 'Found {} account{} of interest. '.format(
-            len(accounts), 's' if len(accounts) > 1 else ''
+            len(accounts), '' if len(accounts) == 1 else 's'
         )
         for a in accounts:
             if a['currency'] == 'USD':
@@ -195,7 +227,7 @@ def get_secrets(key):
         return None, None
 
 
-def get_product(slot):
+def get_product_info(slot):
     logger.info('slot: {}'.format(slot))
     if re.search(PRODUCTS['BTC']['re'], slot):
         return PRODUCTS['BTC']
