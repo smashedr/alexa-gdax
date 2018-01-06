@@ -1,0 +1,32 @@
+{% extends "main.html" %}
+
+{% block menu %}{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-xs-4 col-xs-offset-4 text-center">
+
+            <p></p>
+
+            <h1>This is Home</h1>
+
+            <p>If you have any messages, they will appear below...</p>
+
+            <div id="login-message">
+                {% if messages %}
+                    <p></p>
+                    <ul class="list-group text-center">
+                        {% for message in messages %}
+                            <li class="list-group-item list-group-item-{{ message.extra_tags }}">
+                                {{ message }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,5 @@
+django
+gdax
+gunicorn
+mysqlclient
+requests

@@ -1,0 +1,6 @@
+# SUPPORTED_CURRENCIES
+
+Bitcoin
+Bitcoin Cash
+Ethereum
+Litecoin

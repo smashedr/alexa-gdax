@@ -1,0 +1,116 @@
+{% extends "main.html" %}
+{% load staticfiles %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "css/login.css" %}">
+{% endblock %}
+
+{% block menu %}{% endblock %}
+
+{% block body %}
+
+    <div id="password-modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog modal-sm vertical-align-center" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title text-center">Additional Support</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            1. E-Mail
+                            <a href="mailto:support@alexa.com">
+                                support@alexa.com
+                                <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                            </a>
+                        </p>
+                        <p>
+                            2. Call Help at
+                            <a href="tel:5555555555">
+                                5555555555
+                                <i class="fa fa-phone" aria-hidden="true"></i>
+                            </a>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <p class="text-center">More information comin gsoon.</p>
+                        <p class="text-center">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="login-outer">
+            {% include 'header.html' %}
+
+            <p>
+                To connect Alexa to GDAX you must generate an API Key, Secret and Password at
+                <a href="https://www.gdax.com/settings/api" target="_blank">gdax.com</a>. For instructions
+                <a href="https://support.gdax.com/customer/en/portal/articles/2425383-how-can-i-create-an-api-key-for-gdax-" target="_blank">click here</a>.
+            </p>
+            <div class="alert alert-info" role="alert">
+                <p>Key must have <strong>View</strong> permission.</p>
+            </div>
+
+            <form class="submit-once" method="POST" name="login" id="login" action="{% url 'authenticate' %}">
+                {% csrf_token %}
+
+                <label for="key" class="">GDAX API Key:</label>
+                <input type="text" name="key" class="form-control" placeholder="API Key" required autofocus>
+
+                <p></p>
+
+                <label for="password" class="">GDAX API Password:</label>
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
+
+                <p></p>
+
+                <label for="secret" class="">GDAX API Secret:</label>
+                <input type="password" name="secret" class="form-control" placeholder="Secret" required>
+
+                {% if request.GET.next %}
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                {% elif request.session.login_next_url %}
+                    <input type="hidden" name="next" value="{{ request.session.login_next_url }}">
+                {% endif %}
+
+                <p></p>
+
+                <div class="text-center">
+                    <button id="login-button" class="btn btn-info center-block" type="submit">
+                        <i class="fa fa-sign-in" aria-hidden="true"></i>
+                        Connect Alexa to GDAX
+                    </button>
+                </div>
+
+                <div id="login-message">
+                    {% if messages %}
+                        <p></p>
+                        <ul class="list-group text-center">
+                            {% for message in messages %}
+                                <li class="list-group-item list-group-item-{{ message.extra_tags }}">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <p></p>
+
+                <div class="text-center">
+                    <a href="#" data-toggle="modal" data-target="#password-modal">
+                        Need Additional Assistance?
+                        <i class="fa fa-info-circle" aria-hidden="true"></i></a>
+                </div>
+
+                <p></p>
+
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

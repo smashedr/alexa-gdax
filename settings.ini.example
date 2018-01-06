@@ -1,0 +1,21 @@
+[django]
+debug          = True
+secret         = xxxxxxxxxxxxxxxxxxxx
+allowed_hosts  = *
+static_root    = C:\tmp
+app_handler    = file
+app_level      = DEBUG
+django_handler = console
+django_level   = INFO
+log_file       = django.log
+db_name        = database
+db_user        = database
+db_pass        = xxxxxxxxxxxxxxxxxxxx
+db_host        = mysql
+db_port        = 3306
+
+[app]
+api_token      = xxxxxxxxxxxxxxxxxxxx
+client_id      = xxxxxxxxxxxxxxxxxxxx
+client_secret  = xxxxxxxxxxxxxxxxxxxx
+redirect_uris  = null
