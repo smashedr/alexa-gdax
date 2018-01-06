@@ -13,9 +13,6 @@ from api.models import TokenDatabase
 logger = logging.getLogger('app')
 config = settings.CONFIG['app']
 
-TXT_UNKNOWN = 'I did not understand that request, please try something else.'
-TXT_ERROR = 'Error looking up {}, please try something else.'
-
 PRODUCTS = {
     'BTC': {
         'product': 'BTC-USD',
@@ -102,14 +99,14 @@ def coin_status(event):
             return alexa_resp(msg, 'Error')
     except Exception as error:
         logger.info('error: {}'.format(error))
-        return alexa_resp(TXT_UNKNOWN, 'Error')
+        return alexa_resp('Error. {}'.format(error), 'Error')
 
 
 def acct_overview(event):
     try:
         d = get_accounts(event['session']['user']['accessToken'])
 
-        accts = []
+        accounts = []
         for a in d:
             if int(a['balance'].replace('.', '')) > 0:
                 c = {
@@ -118,18 +115,18 @@ def acct_overview(event):
                     'available': a['available'],
                     'hold': a['hold'],
                 }
-                accts.append(c)
+                accounts.append(c)
 
-        if not accts:
+        if not accounts:
             msg = 'No accounts with currency found.'
             ar = alexa_resp(msg, 'Accounts Overview')
             logger.info(ar)
             return ar
 
         speech = 'Found {} account{} of interest. '.format(
-            len(accts), 's' if len(accts) > 1 else ''
+            len(accounts), 's' if len(accounts) > 1 else ''
         )
-        for a in accts:
+        for a in accounts:
             if a['currency'] == 'USD':
                 balance = '{} dollars'.format(
                     round_usd(a['balance'])
@@ -167,9 +164,7 @@ def acct_overview(event):
 
 def get_accounts(key):
     try:
-        td = TokenDatabase.objects.get(key=key)
-        secret = td.secret
-        password = td.password
+        secret, password = get_secrets(key)
 
         auth_client = gdax.AuthenticatedClient(key, secret, password)
         gdax_accounts = auth_client.get_accounts()
@@ -179,6 +174,17 @@ def get_accounts(key):
     except Exception as error:
         logger.exception(error)
         return False
+
+
+def get_secrets(key):
+    try:
+        td = TokenDatabase.objects.get(key=key)
+        secret = td.secret
+        password = td.password
+        return secret, password
+    except Exception as error:
+        logger.exception(error)
+        return None, None
 
 
 def get_product(slot):
