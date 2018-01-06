@@ -3,10 +3,9 @@ from configparser import ConfigParser
 from distutils.util import strtobool
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_FILE = os.path.join(BASE_DIR, 'settings.ini')
-
+config_file = os.path.join(BASE_DIR, 'settings.ini')
 cp = ConfigParser()
-cp.read(CONFIG_FILE)
+cp.read(config_file)
 config = cp['django']
 CONFIG = cp
 

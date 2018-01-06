@@ -73,6 +73,7 @@ def alexa_post(request):
 
 
 def coin_status(event):
+    # Alexa Response
     try:
         value = event['request']['intent']['slots']['currency']['value']
         logger.info('value: {}'.format(value))
@@ -103,6 +104,7 @@ def coin_status(event):
 
 
 def acct_overview(event):
+    # Alexa Response
     try:
         d = get_accounts(event['session']['user']['accessToken'])
 
