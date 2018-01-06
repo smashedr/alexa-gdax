@@ -90,33 +90,6 @@ def account_value(event):
         return alexa_resp('Error: {}'.format(error), 'Error')
 
 
-def get_total_account_value(accounts):
-    total = 0
-    for a in accounts:
-        value = get_account_value(a)
-        total += value
-    return round_usd(total)
-
-
-def get_account_value(account):
-    if account['currency'] == 'USD':
-        return round_usd(account['balance'])
-    product = PRODUCTS[account['currency']]
-    d = get_gdax_product(product)
-    last = d['last']
-    balance = account['balance']
-    value = float(balance) * float(last)
-    return round_usd(value)
-
-
-def get_gdax_product(product):
-    url = 'https://api.gdax.com/products/{}/stats'.format(
-        product['product']
-    )
-    r = requests.get(url)
-    return r.json()
-
-
 def coin_status(event):
     # Alexa Response
     try:
@@ -216,6 +189,33 @@ def get_accounts(key):
     except Exception as error:
         logger.exception(error)
         return False
+
+
+def get_total_account_value(accounts):
+    total = 0
+    for a in accounts:
+        value = get_account_value(a)
+        total += value
+    return round_usd(total)
+
+
+def get_account_value(account):
+    if account['currency'] == 'USD':
+        return round_usd(account['balance'])
+    product = PRODUCTS[account['currency']]
+    d = get_gdax_product(product)
+    last = d['last']
+    balance = account['balance']
+    value = float(balance) * float(last)
+    return round_usd(value)
+
+
+def get_gdax_product(product):
+    url = 'https://api.gdax.com/products/{}/stats'.format(
+        product['product']
+    )
+    r = requests.get(url)
+    return r.json()
 
 
 def get_secrets(key):
