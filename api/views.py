@@ -84,7 +84,7 @@ def coin_status(event):
             r = requests.get(url)
             d = json.loads(r.content.decode())
             speech = ('{} stats for the last 24 hours. '
-                      'The low was {}, the high was {} '
+                      'The low was {}, the high was {}, '
                       'and the last price is {}').format(
                 product['short'],
                 round_usd(d['low']),
@@ -119,9 +119,7 @@ def acct_overview(event):
 
         if not accounts:
             msg = 'No accounts with currency found.'
-            ar = alexa_resp(msg, 'Accounts Overview')
-            logger.info(ar)
-            return ar
+            return alexa_resp(msg, 'Accounts Overview')
 
         speech = 'Found {} account{} of interest. '.format(
             len(accounts), 's' if len(accounts) > 1 else ''
@@ -154,9 +152,7 @@ def acct_overview(event):
             if no_float(hold) > 0:
                 speech += 'with {} on hold. '.format(hold)
 
-        ar = alexa_resp(speech, 'Accounts Overview')
-        logger.info(ar)
-        return ar
+        return alexa_resp(speech, 'Accounts Overview')
     except Exception as error:
         logger.exception(error)
         return alexa_resp('Error: {}'.format(error), 'Error')
