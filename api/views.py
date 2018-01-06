@@ -71,7 +71,7 @@ def coin_status(event):
         value = value.lower().replace('look up', '').strip()
         value = value.lower().replace('search', '').strip()
         value = value.lower().replace('find', '').strip()
-        print('value: {}'.format(value))
+        logger.info('value: {}'.format(value))
         if value in PRODUCTS:
             url = 'https://api.gdax.com/products/{}/stats'.format(
                 PRODUCTS[value]
@@ -94,19 +94,13 @@ def coin_status(event):
             return alexa_resp(msg, 'Error')
 
     except Exception as error:
-        print('error: {}'.format(error))
+        logger.info('error: {}'.format(error))
         return alexa_resp(TXT_UNKNOWN, 'Error')
 
 
 def acct_overview(event):
     try:
-        url = 'https://dev.alexa-gdax.space/api/accounts/'
-        data = {
-            'api_token': os.environ.get('api_token'),
-            'key': os.environ.get('access_token'),
-        }
-        r = requests.post(url, data=data)
-        d = json.loads(r.content.decode())
+        d = get_accounts(event['session']['user']['accessToken'])
 
         accts = []
         for a in d:
@@ -122,7 +116,7 @@ def acct_overview(event):
         if not accts:
             msg = 'No accounts with currency found.'
             ar = alexa_resp(msg, 'Accounts Overview')
-            print(ar)
+            logger.info(ar)
             return ar
 
         speech = 'Found {} account{} of interest. '.format(
@@ -157,53 +151,27 @@ def acct_overview(event):
                 speech += 'with {} on hold. '.format(hold)
 
         ar = alexa_resp(speech, 'Accounts Overview')
-        print(ar)
+        logger.info(ar)
         return ar
     except Exception as error:
-        print(error)
         logger.exception(error)
         return alexa_resp('Error: {}'.format(error), 'Error')
 
 
-# @csrf_exempt
-# @require_http_methods(['POST'])
-# def accounts(request):
-#     """
-#     # View  /api/accounts/
-#     """
-#     log_req(request)
-#     try:
-#         _key = request.POST.get('key')
-#         _api_token = request.POST.get('api_token')
-#
-#         if _api_token != config['api_token']:
-#             return JsonResponse(
-#                 error_resp('invalid_api_token', 'API Token Invalid'),
-#                 status=401,
-#             )
-#
-#         td = TokenDatabase.objects.get(key=_key)
-#         secret = td.secret
-#         password = td.password
-#
-#         if not _key or not secret or not password:
-#             return JsonResponse(
-#                 error_resp('missing_credentials', 'API Credentials Missing'),
-#                 status=401,
-#             )
-#
-#         auth_client = gdax.AuthenticatedClient(_key, secret, password)
-#         gdax_accounts = auth_client.get_accounts()
-#         acct_json = json.dumps(gdax_accounts)
-#         logger.info(acct_json)
-#
-#         return JsonResponse(gdax_accounts, safe=False)
-#
-#     except Exception as error:
-#         logger.exception(error)
-#         return JsonResponse(
-#             error_resp('unknown_error', 'Unknown Error'), status=400
-#         )
+def get_accounts(key):
+    try:
+        td = TokenDatabase.objects.get(key=key)
+        secret = td.secret
+        password = td.password
+
+        auth_client = gdax.AuthenticatedClient(key, secret, password)
+        gdax_accounts = auth_client.get_accounts()
+        logger.info(gdax_accounts)
+
+        return gdax_accounts
+    except Exception as error:
+        logger.exception(error)
+        return False
 
 
 def round_usd(in_float):
