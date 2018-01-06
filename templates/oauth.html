@@ -6,17 +6,21 @@
 {% endblock %}
 
 {% block body %}
+    <p></p>
 
     <div class="row">
-        <div id="login-outer">
+        <div id="login-outer" class="col-sm-6 col-sm-offset-3">
+            <div id="login-inner">
+
+
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-xs-4">
                     <img id="login-logo" class="img-responsive center-block" src="{% static 'images/al64.png' %}" alt="alexa-gdax">
                 </div>
-                <div class="col-sm-4">
+                <div class="col-xs-4">
                     <img id="login-logo" class="img-responsive center-block" src="{% static 'images/arrow64.png' %}" alt="alexa-gdax">
                 </div>
-                <div class="col-sm-4">
+                <div class="col-xs-4">
                     <img id="login-logo" class="img-responsive center-block" src="{% static 'images/gdax64.jpg' %}" alt="alexa-gdax">
                 </div>
             </div>
@@ -24,6 +28,8 @@
 
             {% block oauth %}{% endblock %}
 
+
+            </div>
         </div>
     </div>
 
