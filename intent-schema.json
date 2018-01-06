@@ -4,6 +4,9 @@
       "intent": "AccountOverview"
     },
     {
+      "intent": "AccountValue"
+    },
+    {
       "intent": "CoinStatus",
       "slots": [
         {
