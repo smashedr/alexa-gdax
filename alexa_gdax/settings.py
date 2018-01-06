@@ -64,21 +64,14 @@ LOGGING = {
     },
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': config['db_name'],
-#         'USER': config['db_user'],
-#         'PASSWORD': config['db_pass'],
-#         'HOST': config['db_host'],
-#         'PORT': config['db_port'],
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': config['db_name'],
+        'USER': config['db_user'],
+        'PASSWORD': config['db_pass'],
+        'HOST': config['db_host'],
+        'PORT': config['db_port'],
     }
 }
 
