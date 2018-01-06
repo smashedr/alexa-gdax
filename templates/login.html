@@ -46,7 +46,18 @@
 
     <div class="row">
         <div id="login-outer">
-            {% include 'header.html' %}
+            <div class="row">
+                <div class="col-sm-4">
+                    <img id="login-logo" class="img-responsive center-block" src="{% static 'images/al64.png' %}" alt="alexa-gdax">
+                </div>
+                <div class="col-sm-4">
+                    <img id="login-logo" class="img-responsive center-block" src="{% static 'images/arrow64.png' %}" alt="alexa-gdax">
+                </div>
+                <div class="col-sm-4">
+                    <img id="login-logo" class="img-responsive center-block" src="{% static 'images/gdax64.jpg' %}" alt="alexa-gdax">
+                </div>
+            </div>
+            <h2 class="text-center">alexa-gdax</h2>
 
             <p>
                 To connect Alexa to GDAX you must generate an API Key, Secret and Password at
@@ -57,7 +68,7 @@
                 <p>Key must have <strong>View</strong> permission.</p>
             </div>
 
-            <form class="submit-once" method="POST" name="login" id="login" action="{% url 'authenticate' %}">
+            <form class="submit-once" method="POST" name="login" id="login" action="{% url 'verify' %}">
                 {% csrf_token %}
 
                 <label for="key" class="">GDAX API Key:</label>

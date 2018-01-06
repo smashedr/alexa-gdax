@@ -83,7 +83,7 @@ def do_authorize(request):
 @require_http_methods(['POST'])
 def do_verify(request):
     """
-    # View  /oauth/redirect
+    # View  /oauth/verify
     """
     log_req(request)
     try:
