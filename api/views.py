@@ -203,11 +203,12 @@ def get_accounts_of_value(accounts):
 
 def get_accounts(key):
     try:
-        secret, password = get_secrets(key)
-        auth_client = gdax.AuthenticatedClient(key, secret, password)
-        gdax_accounts = auth_client.get_accounts()
-        logger.info('gdax_accounts: {}'.format(gdax_accounts))
-        return gdax_accounts
+        with requests_cache.disabled():
+            secret, password = get_secrets(key)
+            auth_client = gdax.AuthenticatedClient(key, secret, password)
+            gdax_accounts = auth_client.get_accounts()
+            logger.info('gdax_accounts: {}'.format(gdax_accounts))
+            return gdax_accounts
     except Exception as error:
         logger.exception(error)
         return False
