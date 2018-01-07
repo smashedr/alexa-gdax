@@ -32,16 +32,9 @@
                 {% endfor %}
             </table>
 
-        <p><small>Page automatically refreshes every 60 seconds.</small></p>
-
-        <hr>
-
-        <a href="." class="btn btn-block btn-lg btn-success center-block" role="button">
-            Refresh Now <i class="fa fa-refresh" aria-hidden="true"></i>
-        </a>
-
-        <div id="login-message">
-            {% if messages %}
+        {% if messages %}
+            <hr>
+            <div id="messages">
                 <p></p>
                 <ul class="list-group text-center">
                     {% for message in messages %}
@@ -50,8 +43,16 @@
                         </li>
                     {% endfor %}
                 </ul>
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
+
+        <hr>
+
+        <p class="text-center"><small>Page automatically refreshes every 60 seconds.</small></p>
+
+        <a href="." class="btn btn-block btn-lg btn-success center-block" role="button">
+            Refresh Now <i class="fa fa-refresh" aria-hidden="true"></i>
+        </a>
 
     </div>
 
