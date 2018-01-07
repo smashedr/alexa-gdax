@@ -13,7 +13,10 @@
         <h1>Accounts Home</h1>
 
         <h3>All Accounts Total: ${{ total_value }} USD</h3>
-        <p>Last Updated: <strong>{% now "F j \a\t g:i A" %}</strong></p>
+        {% load tz %}
+        {% localtime on %}
+        <p>Last Updated: <strong>{% now "M jS \a\t g:i A T" %}</strong></p>
+        {% endlocaltime %}
 
             <table class="table table-hover table-condensed table-striped">
                 <tr>
@@ -25,6 +28,8 @@
                     </tr>
                 {% endfor %}
             </table>
+
+        <p><small>This page automatically refreshes every <mark>60</mark> seconds.</small></p>
 
         <hr>
 
