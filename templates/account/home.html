@@ -1,0 +1,41 @@
+{% extends "account.html" %}
+
+{% block account %}
+
+    <div class="row">
+
+        <p></p>
+
+        <h1>Accounts Home</h1>
+
+        <h3>All Accounts Total: ${{ total_value }} USD</h3>
+
+            <table class="table table-hover table-condensed table-striped">
+                <tr>
+                    <th>Account</th><th>Balance</th>
+                </tr>
+                {% for account in accounts %}
+                    <tr>
+                        <td>{{ account.currency }}</td><td>{{ account.balance }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+        <hr>
+
+        <div id="login-message">
+            {% if messages %}
+                <p></p>
+                <ul class="list-group text-center">
+                    {% for message in messages %}
+                        <li class="list-group-item list-group-item-{{ message.extra_tags }}">
+                            {{ message }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+    </div>
+
+{% endblock %}

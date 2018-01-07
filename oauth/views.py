@@ -17,28 +17,28 @@ config = settings.CONFIG['app']
 
 def has_success(request):
     """
-    # View  /success
-    # This is for debugging only
-    # You will be redirected back to Alexa
-    # I am not even sure if this is even used...
+    View  /success
+    This is for debugging only
+    You will be redirected back to Alexa
+    I am not even sure if this is even used...
     """
     return render(request, 'oauth/success.html')
 
 
 def has_error(request):
     """
-    # View  /error
-    # This is for debugging only
-    # Error handling does not yet exist
+    View  /error
+    This is for debugging only
+    Error handling does not yet exist
     """
     return render(request, 'oauth/error.html')
 
 
 def privacy_policy(request):
     """
-    # View  /privacy
-    # This is copied from old project
-    # It will be removed and added to home
+    View  /privacy
+    This is copied from old project
+    It will be removed and added to home
     """
     return render(request, 'oauth/privacy.html')
 
@@ -46,7 +46,7 @@ def privacy_policy(request):
 @require_http_methods(['GET'])
 def do_authorize(request):
     """
-    # View  /oauth/authorize
+    View  /oauth/authorize
     """
     log_req(request)
     try:
@@ -83,7 +83,7 @@ def do_authorize(request):
 @require_http_methods(['POST'])
 def do_verify(request):
     """
-    # View  /oauth/verify
+    View  /oauth/verify
     """
     log_req(request)
     try:
@@ -101,7 +101,7 @@ def do_verify(request):
                 'Error: {}'.format(gdax_accounts['message']),
                 extra_tags='danger',
             )
-            return redirect('connect')
+            return redirect('authorize')
 
         try:
             td = TokenDatabase.objects.get(key=_key)
@@ -141,14 +141,14 @@ def do_verify(request):
             'Error: {}'.format(error),
             extra_tags='danger',
         )
-        return redirect('connect')
+        return redirect('authorize')
 
 
 @csrf_exempt
 @require_http_methods(['POST'])
 def give_token(request):
     """
-    # View  /oauth/token
+    View  /oauth/token
     """
     log_req(request)
     try:
