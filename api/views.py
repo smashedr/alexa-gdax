@@ -14,7 +14,7 @@ from api.models import TokenDatabase
 logger = logging.getLogger('app')
 config = settings.CONFIG['app']
 
-requests_cache.install_cache('pub-requests', backend='sqlite', expire_after=30)
+requests_cache.install_cache('pub-requests', backend='sqlite', expire_after=15)
 
 PRODUCTS = {
     'BTC': {

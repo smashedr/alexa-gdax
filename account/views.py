@@ -43,6 +43,7 @@ def show_login(request):
     """
     View  /account/logout/
     """
+    log_req(request)
     request.session['login_next_url'] = get_next_url(request)
     return render(request, 'account/login.html')
 
@@ -52,6 +53,7 @@ def do_logout(request):
     """
     View  /account/logout/
     """
+    log_req(request)
     next_url = get_next_url(request)
     logout(request)
     request.session['login_next_url'] = next_url
@@ -69,7 +71,7 @@ def do_login(request):
         _password = request.POST.get('password')
         td = TokenDatabase.objects.get(key=_key)
         if _password == td.password:
-            if login_user(request, _key, _password):
+            if login_user(request, _key):
                 return HttpResponseRedirect(get_next_url(request))
             else:
                 raise ValueError('Logging in user failed.')
@@ -90,7 +92,7 @@ def do_login(request):
         return redirect('login')
 
 
-def login_user(request, username, password):
+def login_user(request, username):
     """
     Login or Create New User
     """
