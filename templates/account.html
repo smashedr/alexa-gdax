@@ -17,7 +17,7 @@
                     Log Out
                     <i class="fa fa-sign-out" aria-hidden="true"></i>
                 </a>
-                Logged in with key: <strong><mark>{{ request.user.username|user_display }}</mark></strong>
+                Logged in as: <strong><mark>{{ request.user.username|user_display }}</mark></strong>
             {% else %}
                 <p>You are not logged in...</p>
             {% endif %}
