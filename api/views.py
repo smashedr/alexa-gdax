@@ -3,6 +3,7 @@ import json
 import logging
 import re
 import requests
+import requests_cache
 from django.conf import settings
 from django.shortcuts import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -12,6 +13,8 @@ from api.models import TokenDatabase
 
 logger = logging.getLogger('app')
 config = settings.CONFIG['app']
+
+requests_cache.install_cache('pub-requests', backend='sqlite', expire_after=30)
 
 PRODUCTS = {
     'BTC': {

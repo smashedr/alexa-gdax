@@ -3,3 +3,4 @@ gdax
 gunicorn
 mysqlclient
 requests
+requests_cache
