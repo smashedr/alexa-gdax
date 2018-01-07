@@ -12,6 +12,9 @@ AccountOverview for an account overview
 AccountOverview for account status
 AccountOverview for accounts status
 
+CoinValue my {currency} account value
+CoinValue for {currency} account value
+
 AccountValue my account value
 AccountValue my total account value
 AccountValue how much my account is worth

@@ -67,6 +67,8 @@ def alexa_post(request):
             return coin_status(event)
         elif intent == 'AccountValue':
             return account_value(event)
+        elif intent == 'CoinValue':
+            return coin_value(event)
         else:
             raise ValueError('Unknown Intent')
     except Exception as error:
@@ -74,8 +76,26 @@ def alexa_post(request):
         return alexa_resp('Error. {}'.format(error), 'Error')
 
 
+def coin_value(event):
+    # Alexa Response - CoinValue
+    try:
+        value = event['request']['intent']['slots']['currency']['value']
+        logger.info('value: {}'.format(value))
+        product = get_product_info(value)
+        accounts = get_accounts(event['session']['user']['accessToken'])
+        account = get_account(accounts, product)
+        value = get_account_value(account)
+        speech = 'Your {} account is currently valued at {}.'.format(
+            product['short'], value
+        )
+        return alexa_resp(speech, 'Accounts Overview')
+    except Exception as error:
+        logger.exception(error)
+        return alexa_resp('Error: {}'.format(error), 'Error')
+
+
 def account_value(event):
-    # Alexa Response
+    # Alexa Response - AccountValue
     try:
         d = get_accounts(event['session']['user']['accessToken'])
         accounts = get_accounts_of_value(d)
@@ -91,7 +111,7 @@ def account_value(event):
 
 
 def coin_status(event):
-    # Alexa Response
+    # Alexa Response - CoinStatus
     try:
         value = event['request']['intent']['slots']['currency']['value']
         logger.info('value: {}'.format(value))
@@ -118,7 +138,7 @@ def coin_status(event):
 
 
 def acct_overview(event):
-    # Alexa Response
+    # Alexa Response - AccountOverview
     try:
         d = get_accounts(event['session']['user']['accessToken'])
         accounts = get_accounts_of_value(d)
@@ -189,6 +209,14 @@ def get_accounts(key):
     except Exception as error:
         logger.exception(error)
         return False
+
+
+def get_account(accounts, product):
+    for a in accounts:
+        if 'currency' in a:
+            if a['currency'] == product['short']:
+                return a
+    return None
 
 
 def get_total_account_value(accounts):
