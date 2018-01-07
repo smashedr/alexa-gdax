@@ -11,6 +11,7 @@ Currently available features:
 - Get an account over of all accounts.
 - Get 24 hour stats for any supported currency.
 - Get your total value of all accounts in USD based on the last price.
+- Get the current value of a specific account in USD based on the last price.
 
 # Skill Information
 

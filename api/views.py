@@ -85,7 +85,7 @@ def coin_value(event):
         accounts = get_accounts(event['session']['user']['accessToken'])
         account = get_account(accounts, product)
         value = get_account_value(account)
-        speech = 'Your {} account is currently valued at {}.'.format(
+        speech = 'Your {} account is currently valued at {} USD.'.format(
             product['short'], value
         )
         return alexa_resp(speech, 'Accounts Overview')
