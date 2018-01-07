@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.views.decorators.http import require_http_methods
 from api.models import TokenDatabase
-from api.views import get_accounts, get_total_account_value
+from api.views import get_accounts, get_account_value, get_total_account_value
 
 logger = logging.getLogger('app')
 
@@ -19,9 +19,18 @@ def account_home(request):
     View  /account/
     """
     log_req(request)
-    accounts = get_accounts(str(request.user))
-    logger.info('accounts: {}'.format(accounts))
-    value = get_total_account_value(accounts)
+    gdax_accounts = get_accounts(str(request.user))
+    logger.info('accounts: {}'.format(gdax_accounts))
+    accounts = []
+    for a in gdax_accounts:
+        value = get_account_value(a)
+        account = {
+            'currency': a['currency'],
+            'balance': a['balance'],
+            'value': value,
+        }
+        accounts.append(account)
+    value = get_total_account_value(gdax_accounts)
     logger.info(value)
     return render(request, 'account/home.html', {
         'accounts': accounts,
