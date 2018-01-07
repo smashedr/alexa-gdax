@@ -14,23 +14,21 @@
         <h1>Account Home</h1>
 
         <h3 class="text-success">Total: ${{ total_value }} USD</h3>
-        {% load tz %}
-        {% localtime on %}
-        <p>Updated: <strong>{% now "M jS \a\t g:i A T" %}</strong></p>
-        {% endlocaltime %}
 
-            <table class="table table-hover table-condensed table-striped">
+        <table class="table table-hover table-condensed table-striped">
+            <tr>
+                <th>Account</th><th>Balance</th><th>USD Value</th>
+            </tr>
+            {% for account in accounts %}
                 <tr>
-                    <th>Account</th><th>Balance</th><th>USD Value</th>
+                    <td>{{ account.currency }}</td>
+                    <td>{{ account.balance|trim_balance:6 }}</td>
+                    <td>${{ account.value }}</td>
                 </tr>
-                {% for account in accounts %}
-                    <tr>
-                        <td>{{ account.currency }}</td>
-                        <td>{{ account.balance|trim_balance:6 }}</td>
-                        <td>${{ account.value }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
+            {% endfor %}
+        </table>
+
+        <p>Updated: <strong>{% now "M jS \a\t g:i A T" %}</strong></p>
 
         {% if messages %}
             <hr>
