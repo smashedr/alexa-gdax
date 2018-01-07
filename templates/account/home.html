@@ -1,5 +1,9 @@
 {% extends "account.html" %}
 
+{% block head %}
+    <meta http-equiv="refresh" content="60">
+{% endblock %}
+
 {% block account %}
 
     <div class="row">
@@ -9,6 +13,7 @@
         <h1>Accounts Home</h1>
 
         <h3>All Accounts Total: ${{ total_value }} USD</h3>
+        <p>Last Updated: <strong>{% now "F j \a\t g:i A" %}</strong></p>
 
             <table class="table table-hover table-condensed table-striped">
                 <tr>
