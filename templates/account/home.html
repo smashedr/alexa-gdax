@@ -12,7 +12,7 @@
 
         <h1>Account Home</h1>
 
-        <h3>Total: ${{ total_value }} USD</h3>
+        <h3 class="text-success">Total: ${{ total_value }} USD</h3>
         {% load tz %}
         {% localtime on %}
         <p>Updated: <strong>{% now "M jS \a\t g:i A T" %}</strong></p>
@@ -33,7 +33,9 @@
 
         <hr>
 
-        <a href="." class="btn btn-block btn-lg btn-success center-block" role="button">Refresh Now</a>
+        <a href="." class="btn btn-block btn-lg btn-success center-block" role="button">
+            Refresh Now <i class="fa fa-refresh" aria-hidden="true"></i>
+        </a>
 
         <div id="login-message">
             {% if messages %}
