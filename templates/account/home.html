@@ -28,7 +28,11 @@
             {% endfor %}
         </table>
 
-        <p>Updated: <strong>{% now "M jS \a\t g:i A T" %}</strong></p>
+        <p>
+            Updated: <strong>{% now "M jS \a\t g:i A T" %}</strong>
+            <br>
+            Time Since Last Refresh: <label id="minutes">00</label>:<label id="seconds">00</label>
+        </p>
 
         {% if messages %}
             <hr>
