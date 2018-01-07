@@ -9,6 +9,8 @@ cp.read(config_file)
 config = cp['django']
 CONFIG = cp
 
+LOGIN_URL = '/account/login/'
+LOGIN_REDIRECT_URL = '/account/'
 STATIC_URL = '/static/'
 TEMPLATES_DIRS = [os.path.join(BASE_DIR, 'templates')]
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]

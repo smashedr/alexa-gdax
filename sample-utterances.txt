@@ -15,6 +15,7 @@ AccountOverview for accounts status
 CoinValue my {currency} account value
 CoinValue for {currency} account value
 
+AccountValue total
 AccountValue my account value
 AccountValue my total account value
 AccountValue how much my account is worth

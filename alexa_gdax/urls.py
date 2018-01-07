@@ -12,5 +12,6 @@ urlpatterns = [
     )),
     url(r'^api/', include('api.urls')),
     url(r'^oauth/', include('oauth.urls')),
+    url(r'^account/', include('account.urls')),
     url(r'^admin/', admin.site.urls, name="django_admin"),
 ]

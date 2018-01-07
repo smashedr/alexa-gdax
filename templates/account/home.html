@@ -1,0 +1,51 @@
+{% extends "account.html" %}
+
+{% block head %}
+    <meta http-equiv="refresh" content="60">
+{% endblock %}
+
+{% block account %}
+
+    <div class="row">
+
+        <p></p>
+
+        <h1>Accounts Home</h1>
+
+        <h3>All Accounts Total: ${{ total_value }} USD</h3>
+        {% load tz %}
+        {% localtime on %}
+        <p>Last Updated: <strong>{% now "M jS \a\t g:i A T" %}</strong></p>
+        {% endlocaltime %}
+
+            <table class="table table-hover table-condensed table-striped">
+                <tr>
+                    <th>Account</th><th>Balance</th>
+                </tr>
+                {% for account in accounts %}
+                    <tr>
+                        <td>{{ account.currency }}</td><td>{{ account.balance }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+        <p><small>This page automatically refreshes every <mark>60</mark> seconds.</small></p>
+
+        <hr>
+
+        <div id="login-message">
+            {% if messages %}
+                <p></p>
+                <ul class="list-group text-center">
+                    {% for message in messages %}
+                        <li class="list-group-item list-group-item-{{ message.extra_tags }}">
+                            {{ message }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+    </div>
+
+{% endblock %}

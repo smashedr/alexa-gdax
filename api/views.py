@@ -53,7 +53,7 @@ def api_home(request):
 @require_http_methods(["POST"])
 def alexa_post(request):
     """
-    # View  /api/alexa
+    View  /api/alexa
     """
     log_req(request)
     try:
@@ -185,6 +185,7 @@ def acct_overview(event):
 
 def get_accounts_of_value(accounts):
     accounts_list = []
+    logger.info('accounts: {}'.format(accounts))
     for a in accounts:
         if int(a['balance'].replace('.', '')) > 0:
             c = {
@@ -200,11 +201,9 @@ def get_accounts_of_value(accounts):
 def get_accounts(key):
     try:
         secret, password = get_secrets(key)
-
         auth_client = gdax.AuthenticatedClient(key, secret, password)
         gdax_accounts = auth_client.get_accounts()
-        logger.info(gdax_accounts)
-
+        logger.info('gdax_accounts: {}'.format(gdax_accounts))
         return gdax_accounts
     except Exception as error:
         logger.exception(error)
@@ -222,6 +221,7 @@ def get_account(accounts, product):
 def get_total_account_value(accounts):
     total = 0
     for a in accounts:
+        logger.info('a: {}'.format(a))
         value = get_account_value(a)
         total += value
     return round_usd(total)
