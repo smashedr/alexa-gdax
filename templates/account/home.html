@@ -1,8 +1,10 @@
 {% extends "account.html" %}
+{% load staticfiles %}
 {% load account_tags %}
 
 {% block sub_head %}
     <meta http-equiv="refresh" content="60">
+    <link href="{% static "css/account.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block account %}
@@ -25,7 +27,7 @@
         </h5>
 
 
-        <img class="img-responsive" src="https://grafana.cssnr.com/render/dashboard-solo/db/gdax-total?var-account={{ request.user.username|user_display }}&panelId=2&width=500&height=300" />
+        <img class="img-responsive center-block" src="https://grafana.cssnr.com/render/dashboard-solo/db/gdax-total?var-account={{ request.user.username|user_display }}&panelId=2&width=500&height=300" />
 
 
         <table class="table table-hover table-condensed table-striped">
@@ -64,11 +66,11 @@
 
         <hr>
 
-        <p class="text-center"><small>Page automatically refreshes every 60 seconds.</small></p>
-
         <a href="." class="btn btn-block btn-lg btn-success center-block" role="button">
             Refresh Now <i class="fa fa-refresh" aria-hidden="true"></i>
         </a>
+
+        <p class="text-center"><small>Page automatically refreshes every 60 seconds.</small></p>
 
     </div>
 
