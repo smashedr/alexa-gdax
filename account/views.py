@@ -1,4 +1,6 @@
 import logging
+import pytz
+from datetime import timedelta
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -6,6 +8,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.views.decorators.http import require_http_methods
+from django.utils import timezone
 from api.models import TokenDatabase
 from account.models import AccountHistory
 from api.views import get_accounts, get_account_value, get_total_account_value
@@ -98,12 +101,19 @@ def do_login(request):
 def cal_history(request, value):
     try:
         h = AccountHistory.objects.get(key=request.user.username)
+        now = timezone.now().today().date() - timedelta(hours=6)
+        if h.generated.date() < now:
+            h.p_day = h.c_day
+            h.c_day = value
+            h.generated = timezone.now()
+            raise ValueError('Expired Values')
     except Exception as error:
         logger.exception(error)
         h = AccountHistory(
             key=request.user.username,
             p_day=float(value),
             c_day=float(value),
+            generated=timezone.now(),
         )
         h.save()
 
