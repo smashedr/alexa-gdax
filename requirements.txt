@@ -4,3 +4,4 @@ gunicorn
 mysqlclient
 requests
 requests_cache
+statsd

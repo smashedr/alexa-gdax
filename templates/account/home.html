@@ -13,8 +13,15 @@
         <h3 class="{{ balance.c_pos|get_account_class }}">
             Change: ${{ balance.c_tot }} (%{{ balance.c_per }})
         </h3>
-        <h5 class="{{ balance.p_pos|get_account_class }}">
-            Yesterday: ${{ balance.p_tot }} (%{{ balance.p_per }})
+        <h5>
+            <span class="{{ balance.p_pos|get_account_class }}">
+                Yesterday: ${{ balance.p_tot }} (%{{ balance.p_per }})
+            </span>
+            <span class="text-info">
+                <a href="https://grafana.cssnr.com/dashboard/db/gdax-total?var-account={{ request.user.username|user_display }}" target="_blank">
+                    View Graph <i class="fa fa-area-chart" aria-hidden="true"></i>
+                </a>
+            </span>
         </h5>
 
         <table class="table table-hover table-condensed table-striped">

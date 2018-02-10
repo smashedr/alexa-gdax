@@ -19,3 +19,6 @@ api_token      = xxxxxxxxxxxxxxxxxxxx
 client_id      = xxxxxxxxxxxxxxxxxxxx
 client_secret  = xxxxxxxxxxxxxxxxxxxx
 redirect_uris  = null
+stats_host     = graphite.cssnr.com
+stats_port     = 8125
+stats_prefix   = alexa.gdax.dev

@@ -7,7 +7,7 @@ register = template.Library()
 
 @register.filter(name='user_display')
 def user_display(value):
-    return '{}****'.format(str(value)[:4])
+    return '{}'.format(str(value)[:5])
 
 
 @register.filter(name='trim_balance')
