@@ -9,11 +9,11 @@
 
     <div class="row">
 
-        <h1 class="{{ balance.c_pos|get_account_class }}">Total: ${{ balance.value }}</h1>
-        <h3 class="{{ balance.c_pos|get_account_class }}">
+        <h1 class="{{ balance.c_pos|get_account_class }}" style="margin-bottom: 0;">Total: ${{ balance.value }}</h1>
+        <h3 class="{{ balance.c_pos|get_account_class }}" style="margin-top: 0; margin-bottom: 0;">
             Change: ${{ balance.c_tot }} (%{{ balance.c_per }})
         </h3>
-        <h5>
+        <h5 style="margin-top: 3px;">
             <span class="{{ balance.p_pos|get_account_class }}">
                 Yesterday: ${{ balance.p_tot }} (%{{ balance.p_per }})
             </span>
@@ -23,6 +23,10 @@
                 </a>
             </span>
         </h5>
+
+
+        <img class="img-responsive" src="https://grafana.cssnr.com/render/dashboard-solo/db/gdax-total?var-account={{ request.user.username|user_display }}&panelId=2&width=500&height=300" />
+
 
         <table class="table table-hover table-condensed table-striped">
             <tr>
@@ -36,6 +40,7 @@
                 </tr>
             {% endfor %}
         </table>
+
 
         <p>
             Updated: <strong>{% now "M jS \a\t g:i A T" %}</strong>
