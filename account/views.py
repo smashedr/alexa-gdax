@@ -24,7 +24,6 @@ def account_home(request):
     """
     log_req(request)
     gdax_accounts = get_accounts(str(request.user))
-    logger.info('accounts: {}'.format(gdax_accounts))
     accounts = []
     for a in gdax_accounts:
         value = get_account_value(a)
@@ -36,7 +35,6 @@ def account_home(request):
         accounts.append(account)
 
     value = get_total_account_value(gdax_accounts)
-    logger.info('value: {}'.format(value))
     account_values = cal_history(request, value)
     return render(request, 'account/home.html', {
         'accounts': accounts,

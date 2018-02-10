@@ -9,21 +9,6 @@ config = settings.CONFIG['app']
 logger = logging.getLogger('app')
 
 
-def add_stat(prefix, value):
-    """
-    Add a Metric
-    """
-    print(config)
-    stats = statsd.StatsClient(config['stats_host'], int(config['stats_port']))
-    metric = '{}.{}'.format(
-        config['stats_prefix'],
-        prefix,
-    )
-    print(metric)
-    print(value)
-    stats.gauge(metric, value)
-
-
 class Command(BaseCommand):
     help = 'Graph Total Stats.'
 
@@ -32,3 +17,15 @@ class Command(BaseCommand):
             gdax_accounts = get_accounts(str(acct.key))
             value = get_total_account_value(gdax_accounts)
             add_stat(acct.key[:5], int(value))
+
+
+def add_stat(prefix, value):
+    """
+    Add a Metric
+    """
+    stats = statsd.StatsClient(config['stats_host'], int(config['stats_port']))
+    metric = '{}.{}'.format(
+        config['stats_prefix'],
+        prefix,
+    )
+    stats.gauge(metric, value)
