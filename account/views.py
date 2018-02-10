@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.views.decorators.http import require_http_methods
 from api.models import TokenDatabase
+from account.models import AccountHistory
 from api.views import get_accounts, get_account_value, get_total_account_value
 
 logger = logging.getLogger('app')
@@ -30,11 +31,13 @@ def account_home(request):
             'value': value,
         }
         accounts.append(account)
+
     value = get_total_account_value(gdax_accounts)
-    logger.info(value)
+    logger.info('value: {}'.format(value))
+    account_values = cal_history(request, value)
     return render(request, 'account/home.html', {
         'accounts': accounts,
-        'total_value': value,
+        'balance': account_values,
     })
 
 
@@ -90,6 +93,53 @@ def do_login(request):
             extra_tags='danger',
         )
         return redirect('login')
+
+
+def cal_history(request, value):
+    try:
+        h = AccountHistory.objects.get(key=request.user.username)
+    except Exception as error:
+        logger.exception(error)
+        h = AccountHistory(
+            key=request.user.username,
+            p_day=float(value),
+            c_day=float(value),
+        )
+        h.save()
+
+    c_tot = round(value - h.c_day, 2)
+    if c_tot > 0:
+        c_per = round(c_tot/h.c_day*100, 2)
+        c_pos = True
+    elif c_tot < 0:
+        c_per = round(-c_tot/h.c_day*100, 2)
+        c_pos = False
+    else:
+        c_per = 0
+        c_pos = True
+
+    p_tot = round(value - h.p_day, 2)
+    if p_tot > 0:
+        p_per = round(p_tot/h.p_day*100, 2)
+        p_pos = True
+    elif p_tot < 0:
+        p_per = round(-p_tot/h.p_day*100, 2)
+        p_pos = False
+    else:
+        p_per = 0
+        p_pos = True
+
+    account_values = {
+        'value': value,
+        'c_tot': c_tot,
+        'c_per': c_per,
+        'c_pos': c_pos,
+        'p_tot': p_tot,
+        'p_per': p_per,
+        'p_pos': p_pos,
+    }
+
+    return account_values
 
 
 def login_user(request, username):

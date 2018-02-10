@@ -14,3 +14,8 @@ def user_display(value):
 def trim_balance(value, length):
     l = value.split('.')
     return '{}.{}'.format(l[0], l[1][:int(length)])
+
+
+@register.filter(name='get_account_class')
+def get_account_class(value):
+    return 'text-success' if value else 'text-danger'
