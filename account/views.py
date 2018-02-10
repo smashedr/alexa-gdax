@@ -102,7 +102,7 @@ def cal_history(request, value):
     try:
         h = AccountHistory.objects.get(key=request.user.username)
         now = timezone.now().today().date() - timedelta(hours=6)
-        if h.generated.date() < now:
+        if h.generated.date() - timedelta(hours=6) < now:
             h.p_day = h.c_day
             h.c_day = value
             h.generated = timezone.now()
