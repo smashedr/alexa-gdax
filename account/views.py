@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.views.decorators.http import require_http_methods
-from django.utils import timezone
 from api.models import TokenDatabase
 from account.models import AccountHistory
 from api.views import get_accounts, get_account_value, get_total_account_value

@@ -1,0 +1,2 @@
+* * * * * root /websites/alexa-gdax/venv/bin/python /websites/alexa-gdax/manage.py graph_stats >>/var/log/alexa-gdax/django.log 2>&1
+30 6 * * * root /websites/alexa-gdax/venv/bin/python /websites/alexa-gdax/manage.py rotate_stats >>/var/log/alexa-gdax/django.log 2>&1
