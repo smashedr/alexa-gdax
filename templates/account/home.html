@@ -20,14 +20,14 @@
                     Yesterday: ${{ balance.p_tot }} (%{{ balance.p_per }})
                 </span>
                 <span class="text-info">
-                    <a href="https://grafana.cssnr.com/dashboard/db/gdax-total?var-account={{ request.user.username|user_display }}" target="_blank">
+                    <a href="https://grafana.cssnr.com/dashboard/db/gdax-total?var-account={{ request.user.username|user_display }}">
                         View Graph <i class="fa fa-area-chart" aria-hidden="true"></i>
                     </a>
                 </span>
             </h5>
         </div>
 
-        <img class="img-responsive center-block" src="https://grafana.cssnr.com/render/dashboard-solo/db/gdax-total?var-account={{ request.user.username|user_display }}&panelId=2&width=500&height=300" />
+        <img class="img-responsive center-block" src="https://grafana.cssnr.com/render/dashboard-solo/db/gdax-total?var-account={{ request.user.username|user_display }}&from=now-3h&to=now&panelId=2&width=500&height=300" />
 
         <table class="table table-hover table-condensed table-striped">
             <tr>
