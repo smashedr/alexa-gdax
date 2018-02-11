@@ -20,7 +20,6 @@ def account_home(request):
     """
     View  /account/
     """
-    log_req(request)
     gdax_accounts = get_accounts(str(request.user))
     accounts = []
     for a in gdax_accounts:
