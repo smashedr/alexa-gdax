@@ -1,0 +1,39 @@
+{% extends "account.html" %}
+{% load staticfiles %}
+{% load account_tags %}
+
+{% block account %}
+
+    <div class="row">
+
+    <h1 class="text-center">Update Balance</h1>
+
+        <form action="{% url 'update_balance' %}" method="post" id="update-balance">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="amount">Amount of Increase or Decrease</label>
+                <input type="text" class="form-control input-lg" id="amount" name="amount" placeholder="0.00" required>
+            </div>
+            <button type="submit" class="btn btn-lg btn-block btn-success" name="action" value="increase">
+                Increase Amount <i class="fa fa-arrow-up" aria-hidden="true"></i>
+            </button>
+            <button type="submit" class="btn btn-lg btn-block btn-danger" name="action" value="decrease">
+                Subtract Amount
+                <i class="fa fa-arrow-down" aria-hidden="true"></i>
+            </button>
+        </form>
+
+        <p></p>
+
+        <a href="{% url 'account_home' %}" class="btn btn-lg btn-block btn-info" role="button">
+            Go Home
+            <i class="fa fa-home" aria-hidden="true"></i>
+        </a>
+
+        <p class="lead">
+            If you have sent money to or from GDAX you can use this form to update your previous balances so your percent change is still accurate.
+        </p>
+
+    </div>
+
+{% endblock %}

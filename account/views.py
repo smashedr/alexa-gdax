@@ -1,4 +1,5 @@
 import logging
+import re
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -39,6 +40,54 @@ def account_home(request):
 
 
 @require_http_methods(['GET'])
+def show_balance(request):
+    """
+    View  /account/balance/
+    """
+    log_req(request)
+    return render(request, 'account/balance.html')
+
+
+@require_http_methods(['POST'])
+def update_balance(request):
+    """
+    View  /account/update/
+    """
+    log_req(request)
+    try:
+        _amount = request.POST.get('amount')
+        _action = request.POST.get('action')
+        logger.info('_amount: {}'.format(_amount))
+        logger.info('_action: {}'.format(_action))
+        m = re.search('\d+(\.\d{1,2})?', _amount)
+        logger.info(m)
+        if m:
+            amount = round(float(m.group(0)), 2)
+            logger.info('amount: {}'.format(amount))
+            h = AccountHistory.objects.get(key=request.user.username)
+            if _action == 'increase':
+                txt = 'Increased'
+                process_update(request, _action, amount)
+            elif _action == 'decrease':
+                txt = 'Decreased'
+                process_update(request, _action, amount)
+            else:
+                raise ValueError('Unknown Action. Try Again.')
+            return msg_redirect(
+                request, messages.SUCCESS, 'success',  'account_home',
+                'Balance successfully {} by {}'.format(txt, amount),
+            )
+        else:
+            raise ValueError('Invalid Input for Balance.')
+    except Exception as error:
+        logger.exception(error)
+        return msg_redirect(
+            request, messages.WARNING, 'danger',  'show_balance',
+            'Error Updating Balance:<br>{}'.format(error),
+        )
+
+
+@require_http_methods(['GET'])
 def show_login(request):
     """
     View  /account/logout/
@@ -76,20 +125,30 @@ def do_login(request):
             else:
                 raise ValueError('Logging in user failed.')
         else:
-            messages.add_message(
-                request, messages.WARNING,
+            return msg_redirect(
+                request, messages.SUCCESS, 'danger',  'login',
                 'Incorrect Password. Please Try Again.',
-                extra_tags='danger',
             )
-            return redirect('login')
     except Exception as error:
         logger.exception(error)
-        messages.add_message(
-            request, messages.WARNING,
+        return msg_redirect(
+            request, messages.WARNING, 'danger',  'login',
             'Invalid Key. Please Try Again.',
-            extra_tags='danger',
         )
-        return redirect('login')
+
+
+def process_update(request, action, amount):
+    h = AccountHistory.objects.get(key=request.user.username)
+    if action == 'increase':
+        h.c_day = h.c_day + amount
+        h.p_day = h.p_day + amount
+        h.save()
+    elif action == 'decrease':
+        h.c_day = h.c_day - amount
+        h.p_day = h.p_day - amount
+        h.save()
+    else:
+        raise ValueError('Unknown Action. Try Again.')
 
 
 def cal_history(username, value):
@@ -179,6 +238,11 @@ def get_next_url(request):
     if '?next=' in next_url:
         next_url = next_url.split('?next=')[1]
     return next_url
+
+
+def msg_redirect(request, msg_type, tags, location, message):
+    messages.add_message(request, msg_type, message, extra_tags=tags)
+    return redirect(location)
 
 
 def log_req(request):

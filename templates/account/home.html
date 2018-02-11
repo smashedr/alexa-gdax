@@ -4,7 +4,6 @@
 
 {% block sub_head %}
     <meta http-equiv="refresh" content="60">
-    <link href="{% static "css/account.css" %}" rel="stylesheet">
 {% endblock %}
 
 {% block account %}
@@ -29,15 +28,27 @@
 
         <img class="img-responsive center-block" src="https://grafana.cssnr.com/render/dashboard-solo/db/gdax-total?var-account={{ request.user.username|user_display }}&from=now-3h&to=now&panelId=2&width=500&height=300" />
 
-        <table class="table table-hover table-condensed table-striped">
+        <table class="table table-hover">
             <tr>
                 <th>Account</th><th>Balance</th><th>USD Value</th>
             </tr>
             {% for account in accounts %}
-                <tr>
+                <tr data-toggle="collapse" data-target="#data-{{ account.currency }}" class="accordion-toggle">
                     <td>{{ account.currency }}</td>
                     <td>{{ account.balance|trim_balance:6 }}</td>
                     <td>${{ account.value }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="hiddenRow">
+                        <div id="data-{{ account.currency }}" class="accordion-body collapse">
+                            <p>
+                                <a class="btn btn-sm btn-default" role="button" target="_blank"
+                                   href="https://www.gdax.com/trade/{{ account.currency }}-USD">GDAX</a>
+                                <a class="btn btn-sm btn-default" role="button" target="_blank"
+                                   href="https://www.tradingview.com/symbols/{{ account.currency }}USD/technicals/">TradingView</a>
+                            </p>
+                        </div>
+                    </td>
                 </tr>
             {% endfor %}
         </table>
@@ -48,24 +59,14 @@
             Time Since Last Refresh: <label id="minutes">00</label>:<label id="seconds">00</label>
         </p>
 
-        {% if messages %}
-            <hr>
-            <div id="messages">
-                <p></p>
-                <ul class="list-group text-center">
-                    {% for message in messages %}
-                        <li class="list-group-item list-group-item-{{ message.extra_tags }}">
-                            {{ message }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-
         <hr>
 
         <a href="." class="btn btn-block btn-lg btn-success center-block" role="button">
             Refresh Now <i class="fa fa-refresh" aria-hidden="true"></i>
+        </a>
+
+        <a href="{% url 'show_balance' %}" class="btn btn-block btn-lg btn-info center-block" role="button">
+            Update Balance Totals <i class="fa fa-usd" aria-hidden="true"></i>
         </a>
 
         <p class="text-center"><small>Page automatically refreshes every 60 seconds.</small></p>

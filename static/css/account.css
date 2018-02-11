@@ -1,1 +1,9 @@
 
+.hiddenRow {
+    padding: 0 !important;
+}
+
+.hiddenRow p {
+    padding-top: 10px;
+    padding-left: 10px;
+}
