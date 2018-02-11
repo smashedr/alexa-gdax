@@ -1,6 +1,4 @@
 import logging
-import pytz
-from datetime import timedelta
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -35,7 +33,7 @@ def account_home(request):
         accounts.append(account)
 
     value = get_total_account_value(gdax_accounts)
-    account_values = cal_history(request, value)
+    account_values = cal_history(request.user.username, value)
     return render(request, 'account/home.html', {
         'accounts': accounts,
         'balance': account_values,
@@ -96,24 +94,21 @@ def do_login(request):
         return redirect('login')
 
 
-def cal_history(request, value):
+def cal_history(username, value):
     try:
-        h = AccountHistory.objects.get(key=request.user.username)
-        now = timezone.now().today().date() - timedelta(hours=6)
-        if h.generated.date() - timedelta(hours=6) < now:
-            h.p_day = h.c_day
-            h.c_day = value
-            h.generated = timezone.now()
-            raise ValueError('Expired Values')
-    except Exception as error:
-        logger.exception(error)
+        h = AccountHistory.objects.get(key=username)
+    except ObjectDoesNotExist:
+        logger.info('Creating AccountHistory Object.')
         h = AccountHistory(
-            key=request.user.username,
+            key=username,
             p_day=float(value),
             c_day=float(value),
             generated=timezone.now(),
         )
         h.save()
+    except Exception as error:
+        logger.exception(error)
+        raise error
 
     c_tot = round(value - h.c_day, 2)
     if c_tot > 0:

@@ -11,7 +11,6 @@
 
     <div class="row">
         <div class="text-center">
-
             <h1 class="{{ balance.c_pos|get_account_class }}" style="margin-bottom: 0;">Total: ${{ balance.value }}</h1>
             <h3 class="{{ balance.c_pos|get_account_class }}" style="margin-top: 0; margin-bottom: 0;">
                 Change: ${{ balance.c_tot }} (%{{ balance.c_per }})
@@ -26,12 +25,9 @@
                     </a>
                 </span>
             </h5>
-
         </div>
 
-
         <img class="img-responsive center-block" src="https://grafana.cssnr.com/render/dashboard-solo/db/gdax-total?var-account={{ request.user.username|user_display }}&panelId=2&width=500&height=300" />
-
 
         <table class="table table-hover table-condensed table-striped">
             <tr>
@@ -45,7 +41,6 @@
                 </tr>
             {% endfor %}
         </table>
-
 
         <p class="text-center">
             Updated: <strong>{% now "M jS \a\t g:i A T" %}</strong>
