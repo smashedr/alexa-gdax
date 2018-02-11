@@ -103,7 +103,6 @@ def cal_history(username, value):
             key=username,
             p_day=float(value),
             c_day=float(value),
-            generated=timezone.now(),
         )
         h.save()
     except Exception as error:
