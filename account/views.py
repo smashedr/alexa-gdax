@@ -5,7 +5,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render, redirect, HttpResponseRedirect
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from django.shortcuts import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_http_methods
 from api.models import TokenDatabase
 from account.models import AccountHistory
@@ -135,6 +137,27 @@ def do_login(request):
             request, messages.WARNING, 'danger',  'login',
             'Invalid Key. Please Try Again.',
         )
+
+
+@require_http_methods(['GET'])
+def get_holding(request, userid, ticker):
+    """
+    View  /account/holdings/<account>/<ticker>
+    """
+    log_req(request)
+    for acct in AccountHistory.objects.all():
+        if acct.key[:5] == userid:
+            gdax_accounts = get_accounts(str(acct.key))
+            logger.info(gdax_accounts)
+            for a in gdax_accounts:
+                if 'currency' in a:
+                    if a['currency'].lower() == ticker.lower():
+                        b = {'balance': a['balance']}
+                        r = JsonResponse(b, status=200)
+                        r['Access-Control-Allow-Origin'] = '*'
+                        return r
+    e = {'Status': '404'}
+    return JsonResponse(e, status=404)
 
 
 def process_update(request, action, amount):
